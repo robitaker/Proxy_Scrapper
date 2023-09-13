@@ -1,0 +1,16 @@
+{
+  "name": "proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/scrapper.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Robson",
+  "license": "ISC",
+  "dependencies": {
+    "superagent": "^8.1.2",
+    "superagent-proxy": "^3.0.0"
+  }
+}
