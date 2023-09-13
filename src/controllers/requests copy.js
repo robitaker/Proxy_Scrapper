@@ -1,5 +1,6 @@
 import superagent from 'superagent';
 import enableProxy from 'superagent-proxy';
+import https from 'https';
 import { promises as fs } from "fs"
 import { options } from "../options.js";
 
@@ -25,24 +26,19 @@ export class RequestsController {
 
     }
 
-    async testProxy(params) {
+    async testProxy(url, proxy, useragent, timeout) {
         try {
 
-            const response = await superagent.get(params.url)
-                .proxy(params.proxy)
-                .set('User-Agent', params.useragent)
-                .timeout(params.timeout)
+            const response = await superagent.get(url)
+                .proxy(proxy)
+                .set('User-Agent', useragent)
+                .timeout(timeout)
 
-            return {
-                status: true,
-                ip: params.proxy
-            }
-
+            
+            return true;
 
         } catch (err) {
-            return {
-                status: false
-            }
+            return false;
         }
     }
 
@@ -89,12 +85,6 @@ export class RequestsController {
         } catch (err) {
             return [];
         }
-    }
-
-    clearProxy(proxy) {
-        proxy = proxy.replace('https://', '');
-        proxy = proxy.replace('http://', '');
-        return proxy;
     }
 
     validProxies(proxies) {
@@ -174,36 +164,18 @@ export class RequestsController {
             if (proxies.length > 1) {
 
                 proxies = this.validProxies(proxies);
-                let reqs = [];
-                let approveds = [];
 
                 for (let i = 0; i <= proxies.length - 1; i++) {
-                    let proxy = proxies[i];
+                    let proxie = proxies[i];
                     let useragent = params.agent ? await this.getUseragents() : options.useragent_default;
-                    reqs.push({
-                        url: params.site,
-                        proxy: "http" + "://" + proxy,
-                        useragent: useragent,
-                        timeout: params.timeout
-                    });
+                    let check = await this.testProxy(params.site, params.proxy + "://" + proxie, useragent, params.timeout);
+                    if (check) {
+                        console.log("Passou");
+                    } else {
+                        console.log("Reprovou");
+                    }
                 }
 
-                try {
-
-                    const responses = await Promise.all(reqs.map(this.testProxy));
-
-                    responses.forEach((res) => {
-                        if (res.status) {
-                            approveds.push(this.clearProxy(res.ip));
-                        }
-                    });
-
-                } catch (err) {
-                    console.log(err);
-                }
-
-                await this.write(params.output, approveds);
-                console.log(`${approveds.length} valid proxies`);
 
             } else {
                 throw new Error("No proxy found.");
@@ -227,8 +199,6 @@ export class RequestsController {
         Timeout: ${params.timeout}
         User Agent: ${params.agent ? "Random user agent" : "Default user agent"}
         Output: ${options.path_default}/${params.output}
-
-        Testing...
         `);
     }
 
