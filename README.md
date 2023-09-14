@@ -8,5 +8,6 @@ Installation:
 
 Scrape proxies:
  - node src/scrapper.js
- - Parameters:
-  - ada
+
+Scraping parameters:
+ - -o or --output output.txt (Output file, where all results will be written, by default is set to "proxies.txt")
