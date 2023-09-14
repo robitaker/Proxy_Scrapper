@@ -166,7 +166,6 @@ export class RequestsController {
     async checkProxies(params) {
 
         try {
-
             this.log_config(params);
             let data = await this.read(params.list);
             let proxies = data.split('\r\n');
@@ -182,7 +181,7 @@ export class RequestsController {
                     let useragent = params.agent ? await this.getUseragents() : options.useragent_default;
                     reqs.push({
                         url: params.site,
-                        proxy: "http" + "://" + proxy,
+                        proxy: params.proxy + "://" + proxy,
                         useragent: useragent,
                         timeout: params.timeout
                     });
