@@ -6,3 +6,7 @@ Installation:
  - Node version >= 18.17
  - npm install
 
+Scrape proxies:
+ - node src/scrapper.js
+ - Parameters:
+  - ada
