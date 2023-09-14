@@ -23,6 +23,7 @@ Parameters for proxy tester:
  - -p or --p https (Proxy type, by default it is http)
  - -a or --agent (Use to generate random user agents in each request, this parameter does not receive any value.)
  - -o or --output "output.txt" (Output file, where all results will be written, by default is set to "proxies.txt")
- - -t or --timeout 10000 (Time in milliseconds for timeout, ny default it is 5000)
+ - -t or --timeout 10000 (Time in milliseconds for timeout, ny default it is 15000)
+ - Example: node src/scrapper.js checkProxies -l proxies.txt -s facebook.com -p https -a -o results.txt -t 15000
 
 *This project was started for study purposes, don't expect something professional, enjoy!
